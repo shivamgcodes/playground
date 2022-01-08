@@ -27,6 +27,7 @@ public class trial {
         bst.preordertraversal();
         System.out.println("\n");
         bst.postordertraversal();
+        System.out.println(" a = " + bst.levels(bst.head));
 
 
 // i WAS JUST READING THE IMPplimentation of vector remove element at in java , ofc , i found out that whenever the method was done , everyelement w

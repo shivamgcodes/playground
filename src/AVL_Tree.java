@@ -1,281 +1,78 @@
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Stack;
+// i have full faith in me , i can certainly do this , also gfg also has only height as an extra
+// field  ,as comapred to bst , so i can do this too ,
+// main problem which i am facing is that i am imagining a tree where in insertion has to be done,
+// i think i will have to write all the cases and then aonly it can be done
+// as AVL tree being an AVL might cancel out a lot of cases
 
-class binarytreenode {
-    Employee data;
-    binarytreenode left;
-    binarytreenode right;
-
-    public binarytreenode(Employee data, binarytreenode leftn, binarytreenode rightn) {
-        this.data = data;
-        this.left = leftn;
-        this.right = rightn;
+class AVL_Tree_Node extends binarytreenode{
+    int height = 0;
+    AVL_Tree_Node left;
+    AVL_Tree_Node right;
+    public AVL_Tree_Node(Employee data, AVL_Tree_Node leftn, AVL_Tree_Node rightn) {
+        super(data, leftn, rightn);
+        height = 0;
     }
 
-    public binarytreenode(Employee e) {
-        this.data = e;
-        this.left = null;
-        this.right = null;
+    public AVL_Tree_Node(Employee e) {
+        super(e);
+        height = 0;
+    }
+    public AVL_Tree_Node clone(AVL_Tree_Node node){
+        AVL_Tree_Node c = new AVL_Tree_Node(node.data , node.left , node.right);
+        c.height = node.height;
+        return c;
     }
 }
+public class AVL_Tree extends binary_search_tree{
+   AVL_Tree_Node head;
 
-class binary_search_tree {
-
-    binarytreenode head;
-
-    public binary_search_tree(Employee a) {
-        head = new binarytreenode(a, null, null);
+    public AVL_Tree(Employee a) {
+        super(a);
     }
-
-    private void insertioninternal(binarytreenode b, Employee employee) {
+    private boolean insertioninternal(AVL_Tree_Node b, Employee employee) {
         if (employee.salary < b.data.salary) {
             if (b.left == null) {
-                b.left = new binarytreenode(employee);
-                return;
+                b.left = new AVL_Tree_Node(employee);
+                if(b.right != null){return false;} // false means height has not been increased
+                else{b.height = b.height + 1;
+                    return true;} // height will be increased
             }
-            insertioninternal(b.left, employee);
+            if(insertioninternal(b.left, employee)){b.height = b.height + 1 ;}
         }
         if (employee.salary > b.data.salary) {
             if (b.right == null) {
-                b.right = new binarytreenode(employee);
-                return;
+                b.right = new AVL_Tree_Node(employee);
+                if(b.left != null){return false;} // false means height has not been increased
+                else{b.height = b.height+1;
+                    return true;} // height will be increased
             }
-            insertioninternal(b.right, employee);
+            if(insertioninternal(b.right, employee)){b.height = b.height + 1;}
         }
-    }
+    return true;}
+    public void insertion(Employee employee){
 
-    public void insertion(Employee employee) {
-        binarytreenode b = this.head;
-        if (employee.salary < b.data.salary) {
-            if (b.left == null) {
-                b.left = new binarytreenode(employee);
-                return;
-            }
-            insertioninternal(b.left, employee);
-        }
-        if (employee.salary > b.data.salary) {
-            if (b.right == null) {
-                b.right = new binarytreenode(employee);
-                return;
-            }
-            insertioninternal(b.right, employee);
-        }
+        insertioninternal(this.head , employee);
+    }
+    private void LL_rotation(AVL_Tree_Node node_which_is_unbalanced){
 
     }
-
-    // these find ones can easily be overriden for searching by first name lastname, position , salary , age
-    public binarytreenode depthfind(Employee employee) {
-        Stack<binarytreenode> stack = new Stack<>();
-        binarytreenode node;
-        stack.add(head);
-        while (!stack.isEmpty()) {
-            node = stack.pop();
-            if (employee.equals(node.data)) {
-                return node;
-            }
-            stack.add(node.left);
-            stack.add(node.right);
-
-        }
-        // not found
-        return null;
+    private void RR_rotation(AVL_Tree_Node node_which_is_unbalanced){
+          /*
+                       a
+                      / \
+                     b   c
+                        / \
+                       d   e
+                            \
+                             g
+            here a is the node with not a good balance factor and for that ,
+            i will first make a clone of a , then put c's data in a
+            then will just manage and d will be on the right of a's clone
+           */
     }
+    private void LR_rotation(AVL_Tree_Node node_which_is_unbalanced){}
+    private void RL_rotation(AVL_Tree_Node node_which_is_unbalanced){}
 
-    public binarytreenode breadthfind(Employee employee) {
-        // i cant find queue in java jdk hence i will use java stack as a queue
-        Stack<binarytreenode> stack = new Stack<>();
-
-        binarytreenode node;
-        stack.add(head);
-        while (!stack.isEmpty()) {
-            node = stack.get(0);
-            stack.removeElementAt(0);
-            if (employee.equals(node.data)) {
-                return node;
-            }
-            stack.add(node.left);
-            stack.add(node.right);
-        }
-        // not found
-        return null;
-
-    }
-
-    // these methods are for returning the father of the desired node which is to be removed
-    private binarytreenode depthfindforremoval(Employee employee) {
-        Stack<binarytreenode> stack = new Stack<>();
-        binarytreenode node;
-        stack.add(head);
-        while (!stack.isEmpty()) {
-            node = stack.pop();
-            if (employee.equals(node.left.data) || employee.equals(node.right.data)) {
-                return node;
-            }
-            stack.add(node.left);
-            stack.add(node.right);
-
-        }
-        // not found
-        return null;
-    }
-
-    private binarytreenode breadthfindremoval(Employee employee) {
-        // i cant find queue in java jdk hence i will use java stack as a queue
-        Stack<binarytreenode> stack = new Stack<>();
-
-        binarytreenode node;
-        stack.add(head);
-        while (!stack.isEmpty()) {
-            node = stack.get(0);
-            stack.removeElementAt(0);
-            if (employee.equals(node.left.data) || employee.equals(node.right.data)) {
-                return node;
-            }
-            stack.add(node.left);
-            stack.add(node.right);
-        }
-        // not found
-        return null;
-
-
-    }
-
-    // i have not dealt with removing the leaf nodes or removing the nodes with just one child
-    public void depthremove(Employee employee) {
-        binarytreenode b = depthfindforremoval(employee);
-        if (b.left.data.equals(employee)) {
-            // incompelete , the web has a different way for dealing with delete for my way go to the paint document named removeinbst
-            binarytreenode c = b.left.right;
-            b.left = b.left.left;
-            binarytreenode d = b.left;
-            while (d.right != null && d.right.right != null) {
-                d = d.right;
-
-            }
-            d.right = c;
-            // what i am doing here is placing the right tree of the removed node at the bottom of the tree, but this will make the tree higly
-            // unbalanced hence i will have to use the method on the web , i will most probably just clear this mess up the next time
-        }
-        if (b.right.data.equals(employee)) ;
-    }
-
-    private void inordertraversal(binarytreenode b, Stack<Employee> stack) {
-        if (b.left == null && b.right == null) {
-            stack.add(b.data);
-            return;
-        }
-        if (b.left != null) {
-            inordertraversal(b.left, stack);
-        }
-
-        stack.add(b.data);
-        if (b.right != null) {
-            inordertraversal(b.right, stack);
-        }
-        return;
-    }
-
-    public ArrayList<Employee> inordertraversal() {
-
-        Stack<Employee> stack = new Stack<>();
-        inordertraversal(this.head, stack);
-        ArrayList<Employee> rstack = new ArrayList<>();
-        while (!stack.isEmpty()) {
-            Employee e = stack.remove(0);
-            // here by removing at from 0 , i am only using stack as a queue i need a queue in here
-            System.out.print(e.firstname + "  ");
-            rstack.add(e);
-        }
-        return rstack;
-    }
-
-    private void preordertraversal(binarytreenode b, Stack<Employee> stack) {
-
-        if (b.left == null && b.right == null) {
-            stack.add(b.data);
-            return;
-        }
-        stack.add(b.data);
-        if (b.left != null) {
-            preordertraversal(b.left, stack);
-        }
-
-
-        if (b.right != null) {
-            preordertraversal(b.right, stack);
-        }
-        return;
-
-    }
-
-    public ArrayList<Employee> preordertraversal() {
-        Stack<Employee> stack = new Stack<>();
-        preordertraversal(this.head, stack);
-        ArrayList<Employee> rstack = new ArrayList<>();
-        while (!stack.isEmpty()) {
-            Employee e = stack.remove(0);
-            System.out.print(e.firstname + "  ");
-            rstack.add(e);
-
-        }
-        return rstack;
-
-    }
-
-    private void postordertraversal(binarytreenode b, Stack<Employee> stack) {
-
-        if (b.left == null && b.right == null) {
-            stack.add(b.data);
-            return;
-        }
-
-        if (b.left != null) {
-            postordertraversal(b.left, stack);
-        }
-
-
-        if (b.right != null) {
-            postordertraversal(b.right, stack);
-        }
-        stack.add(b.data);
-        return;
-
-    }
-
-    public ArrayList<Employee> postordertraversal() {
-        Stack<Employee> stack = new Stack<>();
-        postordertraversal(this.head, stack);
-        ArrayList<Employee> rstack = new ArrayList<>();
-
-        while (!stack.isEmpty()) {
-            Employee e = stack.remove(0);
-            System.out.print(e.firstname + "  ");
-            rstack.add(e);
-        }
-        return rstack;
-    }
-
-    public binarytreenode constructfrom_in_and_pre(ArrayList<Employee> inorder, ArrayList<Employee> preorder) {
-
-        // return the head , for the other recursed finctions just return the head of the subtree so that we can attach that one as the left or right
-        Employee e = preorder.get(0);
-        binarytreenode h = new binarytreenode(e, null, null);
-        if (inorder.contains(e)) {
-            h.left = constructfrom_in_and_pre((ArrayList<Employee>) inorder.subList(0, inorder.indexOf(e) + 1), preorder);
-            h.right = constructfrom_in_and_pre((ArrayList<Employee>) inorder.subList(inorder.indexOf(e), inorder.size()), preorder);
-
-// here first of all i have to put a while loop in place of the if statement , also i will have to make the base cases
-            // wherin the sizee of the list is 1 and i will just break make that element into a node with null left and right
-            // also i have to take care of the cases wherein the node has only left or only right child
-        }
-
-
-    return null;}
-}
-
-public class AVL_Tree {
 
 
 }
-

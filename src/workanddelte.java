@@ -17,7 +17,9 @@ public class workanddelte {
         sleep(2000);
 
         robot.mouseMove(620, 235);
-
+// confusion - >  if
+        // if
+        //   else if - if i mean else only for the second if what should i do , maybe curly braces
     }
 
 }

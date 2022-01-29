@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class trial {
@@ -21,26 +22,34 @@ public class trial {
         bst.insertion(f);
         bst.insertion(h);
         bst.insertion(i);
+        //System.out.print("inorder traversal :- ");
+        ArrayList<AVL_Tree_Node> in = bst.inordertraversal();
+        ArrayList<AVL_Tree_Node> pre = bst.preordertraversal();
+        AVL_Tree bs = new AVL_Tree(AVL_Tree.mfrominandpre(in , pre , 0 , in.size() - 1));
+        ArrayList<AVL_Tree_Node> in2 = bs.inordertraversal();
+        ArrayList<AVL_Tree_Node> pre2 = bs.preordertraversal();
+        System.out.println("\ninorder1: -");
+        for(int kl = 0 ; kl < in.size() -1 ; kl++){System.out.print(in.get(kl).data.firstname +" ");}
 
-        bst.inordertraversal();
+        System.out.println("\ninorder2: -");
+        for(int kl = 0 ; kl < in2.size() -1 ; kl++){System.out.print(in2.get(kl).data.firstname+" ");}
+
+        System.out.println("\npre1: -");
+        for(int kl = 0 ; kl < pre.size() -1 ; kl++){System.out.print(pre.get(kl).data.firstname+" ");}
+
+        System.out.println("\npre2: -");
+        for(int kl = 0 ; kl < pre2.size() -1 ; kl++){System.out.print(pre2.get(kl).data.firstname+" ");}
+
+       // ArrayList<Employee> in = bst.inordertraversal();
+
        // System.out.println(bst.head.data.firstname);
      //   System.out.println(bst.head.right.left.data.firstname);
       //  System.out.println(bst.head.right.right.data.firstname);
-        System.out.println("\n");
-        bst.preordertraversal();
-        System.out.println("\n");
-        bst.postordertraversal();
-        System.out.println(" a = " + bst.levels(bst.head));
 
-        System.out.println("//////////////////////////////////////////////////////////////////////////");
+        //System.out.println(" a = " + bst.levels(bst.head));
+       // bst.constructfrom_in_and_pre(in , pre);
 
-        AVL_Tree avl = new AVL_Tree(new Employee("a", "a", 100));
-        avl.insertion(new Employee("b", "b", 80));
-        avl.insertion(new Employee("c", "c ", 70));
-        System.out.println(avl.head.data.firstname);
-        System.out.println(avl.head.left.data.firstname);
-        System.out.println(avl.head.right.data.firstname);
-        avl.inordertraversal();
+
 
 
 // i WAS JUST READING THE IMPplimentation of vector remove element at in java , ofc , i found out that whenever the method was done , everyelement w
